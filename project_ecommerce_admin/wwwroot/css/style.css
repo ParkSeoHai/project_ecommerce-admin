@@ -1,0 +1,139 @@
+@import "./reset.css";
+@import "./fonts.css";
+@import "./base.css";
+
+:root {
+    --color-primary: #4B49AC;
+}
+
+/* Header */
+.header {
+    position: fixed;
+    height: 60px;
+    width: 100%;
+    box-shadow: 0px 5px 21px -5px #CDD1E1;
+    background-color: #fff;
+    overflow: hidden;
+    z-index: 999;
+}
+
+.header .logo {
+    width: 235px;
+}
+
+.header .logo__img {
+    height: 34px;
+    margin-top: 10px;
+}
+
+.header__body--left .navbar-toggle {
+    padding: 10px;
+}
+
+.header__body--left .search-group {
+    margin-left: 50px;
+}
+
+.header__body--left .search-group__icon {
+    cursor: pointer;
+}
+
+.header__body--left .search-group__input {
+    border: none;
+    outline: none;
+    font-size: 1.5rem;
+    padding: 6px 12px;
+}
+
+.header__body--right .nav-profile {
+    cursor: pointer;
+}
+
+.header__body--right .nav-profile__img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.header__body--right .nav-item .bell-icon {
+    position: relative;
+}
+
+.header__body--right .nav-item .bell-icon::before {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 0;
+    right: 6px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+}
+
+/* Side bar */
+.sidebar {
+    position: relative;
+    padding-top: 60px;
+}
+
+.sidebar-nav {
+    position: absolute;
+    height: 100vh;
+    width: 235px;
+    padding: 15px 10px 0 10px;
+    box-shadow: 0 0 3px 1px #a7a3a3;
+    background-color: #fff;
+    z-index: 99;
+    animation: fadeout ease-in-out 0.4s;
+    display: none;
+}
+
+@keyframes fadeout {
+    from {
+        opacity: 0;
+        width: 0;
+    }
+    to {
+        opacity: 1;
+        width: 235px;
+    }
+}
+
+.sidebar-nav.show {
+    display: block;
+}
+
+.sidebar-nav .nav-item {
+    display: block;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.sidebar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    color: #6C7383;
+    padding: 13px 15px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.sidebar-nav .nav-link.active,
+.sidebar-nav .nav-link:hover {
+    color: #fff;
+    background-color: var(--color-primary);
+}
+
+.sidebar-nav .nav-link.active {
+    pointer-events: none;
+}
+
+.sidebar-nav .nav-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.sidebar-nav .nav-text {
+    margin-left: 8px;
+    margin-right: auto;
+}
