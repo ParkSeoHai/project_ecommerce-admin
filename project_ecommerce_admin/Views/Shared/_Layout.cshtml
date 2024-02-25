@@ -82,10 +82,12 @@
     </nav>
 
     <!-- Main -->
-    <main role="main" class="pt-3">
+    <main role="main" class="main-content pt-4">
         <div class="main-container">
             @RenderBody()
         </div>
+
+        <div class="modal" onclick="clickModal(this)"></div>
     </main>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

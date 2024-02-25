@@ -6,7 +6,6 @@
     --color-primary: #4B49AC;
 }
 
-/* Header */
 .header {
     position: fixed;
     height: 60px;
@@ -28,21 +27,6 @@
 
 .header__body--left .navbar-toggle {
     padding: 10px;
-}
-
-.header__body--left .search-group {
-    margin-left: 50px;
-}
-
-.header__body--left .search-group__icon {
-    cursor: pointer;
-}
-
-.header__body--left .search-group__input {
-    border: none;
-    outline: none;
-    font-size: 1.5rem;
-    padding: 6px 12px;
 }
 
 .header__body--right .nav-profile {
@@ -78,21 +62,21 @@
 
 .sidebar-nav {
     position: absolute;
-    height: 100vh;
+    height: calc(100vh - 60px);
     width: 235px;
     padding: 15px 10px 0 10px;
     box-shadow: 0 0 3px 1px #a7a3a3;
     background-color: #fff;
     z-index: 99;
-    animation: fadeout ease-in-out 0.4s;
     display: none;
 }
 
-@keyframes fadeout {
+@keyframes fadeIn {
     from {
         opacity: 0;
         width: 0;
     }
+
     to {
         opacity: 1;
         width: 235px;
@@ -101,6 +85,7 @@
 
 .sidebar-nav.show {
     display: block;
+    animation: fadeIn ease-in-out 0.4s;
 }
 
 .sidebar-nav .nav-item {
@@ -136,4 +121,74 @@
 .sidebar-nav .nav-text {
     margin-left: 8px;
     margin-right: auto;
+}
+
+/* Main */
+.main-content {
+    position: relative;
+    background-color: #f5f7ff;
+    min-height: calc(100vh - 60px);
+}
+
+.main-title {
+    font-size: 2.3rem;
+    margin-top: 20px;
+}
+
+
+.breadcrumb-link:hover {
+    color: var(--color-primary);
+}
+
+.block-content {
+    padding: 20px;
+    background-color: #fff;
+}
+
+.block-content__header--left .search-group__input {
+    background-color: transparent;
+}
+
+.block-content__header--btn {
+    font-size: 1.5rem;
+    text-transform: capitalize;
+    border-radius: 10px;
+    padding: 10px;
+    color: #fff;
+    background-color: var(--color-primary);
+}
+
+.block-content__header--btn:hover {
+    color: #fff;
+    opacity: 0.9;
+}
+
+.table-block .table tr:first-child {
+    font-weight: 600;
+    color: #fff;
+    --bs-table-color: #fff;
+    --bs-table-bg: var(--color-primary);
+}
+
+.table-block tr {
+    border-bottom: 1px solid var(--color-primary);
+}
+
+.table-block tr:first-child th {
+    padding: 10px 5px;
+}
+
+.table-block tr th:first-child {
+    text-align: center;
+}
+
+.table-block th,
+.table-block td {
+    vertical-align: middle;
+}
+
+.table-block img {
+    width: 50px;
+    height: 50%;
+    border-radius: 4px;
 }
