@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using project_ecommerce_admin.Data;
+using project_ecommerce_admin.Repositories.Interface;
+using project_ecommerce_admin.Repositories.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,16 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
+
+// Repositories
+builder.Services.AddScoped<IBrand, BrandService>();
+builder.Services.AddScoped<ICategory, CategoryService>();
+builder.Services.AddScoped<IAddressShop, AddressShopService>();
+builder.Services.AddScoped<IProduct, ProductService>();
+builder.Services.AddScoped<IProductImage, ProductImageService>();
+builder.Services.AddScoped<IProductColor, ProductColorService>();
+builder.Services.AddScoped<IProductOption, ProductOptionService>();
+builder.Services.AddScoped<IProductAddressShop, ProductAddressShopService>();
 
 var app = builder.Build();
 

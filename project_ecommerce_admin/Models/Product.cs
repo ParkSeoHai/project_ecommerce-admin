@@ -16,8 +16,10 @@ namespace project_ecommerce_admin.Models
         public bool Publish { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set;}
-        public DateTime CreatedBy { get; set; }
-        public DateTime UpdatedBy { get; set;}
+        [Column(TypeName = "nvarchar(500)")]
+        public string CreatedBy { get; set; }
+        [Column(TypeName = "nvarchar(500)")]
+        public string UpdatedBy { get; set;}
 
         // Foreign key table Category
         public Guid CategoryId { get; set; }

@@ -25,6 +25,16 @@ span {
     padding: 0 35px;
 }
 
+.bg-white {
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.lv-2 {
+    font-size: 1.6rem;
+}
+
 /* Search */
 .search-group {
     margin-left: 50px;

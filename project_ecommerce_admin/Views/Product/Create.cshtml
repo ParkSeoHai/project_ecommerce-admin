@@ -1,4 +1,7 @@
-﻿@{
+﻿@using project_ecommerce_admin.DTOs.Product;
+@model ProductAddViewDto
+
+@{
     ViewData["Title"] = "Create Product";
 }
 
@@ -14,4 +17,497 @@
         <li class="breadcrumb-item active" aria-current="page">Add Product</li>
     </ol>
 </nav>
-<h1 class="main-title fw-semibold">Add Product</h1>
+<!-- Body -->
+<div class="product-info mt-4">
+    <div class="row">
+        <div class="col-9">
+            <div class="bg-white product-info__block">
+                <!-- Header -->
+                <div class="product-info__step row">
+                    <div class="product-info__step--item product-step__header--1 col" onclick="showStep(1)">
+                        <div class="product-info__text">
+                            <span class="text-uppercase">Step 1</span>
+                            <p>Overview</p>
+                        </div>
+                    </div>
+
+                    <div class="product-info__step--item product-step__header--2 col" onclick="showStep(2)">
+                        <div class="product-info__text">
+                            <span class="text-uppercase">Step 2</span>
+                            <p>Descriptions</p>
+                        </div>
+                    </div>
+
+                    <div class="product-info__step--item product-step__header--3 col" onclick="showStep(3)">
+                        <div class="product-info__text">
+                            <span class="text-uppercase">Step 3</span>
+                            <p>Pricing</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Body -->
+                <div class="product-info__body">
+                    <!-- Step 1 -->
+                    <div class="product-info__step--body product-step__body--1">
+                        <!-- Name -->
+                        <div class="row mb-5">
+                            <div class="col-4">
+                                <h2 class="product-info__title lv-2">
+                                    Product Name
+                                    <span class="text-danger">*</span>
+                                </h2>
+                            </div>
+                            <div class="col-8">
+                                <div class="input-group">
+                                    <input id="product-name" type="text" class="form-control fs-4 fw-semibold"
+                                           placeholder="Enter product name">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Image -->
+                        <div class="row mb-5">
+                            <div class="col-4">
+                                <h2 class="product-info__title lv-2">
+                                    Product Images
+                                    <span class="text-danger">*</span>
+                                </h2>
+                            </div>
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="col">
+                                        <input id="product-images" class="form-control fs-4" type="file" multiple>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-primary fs-4" onclick="uploadProductImage()">Upload</button>
+                                    </div>
+                                </div>
+                                <div class="product-info__image mt-3 d-flex align-items-center flex-wrap gap-3">
+                                    @* <div class="product-info__image--item">
+                                        <img src="https://product.hstatic.net/200000713019/product/iphone-13-hai-phong-3_e68d9b753b4340009113006ce7972daf_30e32c9b186944b6aed5de1d596efd2c_large.jpg"
+                                             alt="">
+                                    </div> *@
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Brand -->
+                        <div class="row mb-5">
+                            <div class="col-4">
+                                <h2 class="product-info__title lv-2">
+                                    Brand
+                                    <span class="text-danger">*</span>
+                                </h2>
+                            </div>
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <select id="product-brand" class="form-select fs-4">
+                                            <option value="0" selected>Select brand</option>
+                                            @foreach(var brand in Model.Brands)
+                                            {
+                                                <option value="@brand.Id">@brand.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Category -->
+                        <div class="row mb-5">
+                            <div class="col-4">
+                                <h2 class="product-info__title lv-2">
+                                    Category
+                                    <span class="text-danger">*</span>
+                                </h2>
+                            </div>
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="col">
+                                        <select id="product-category__1" class="form-select fs-4" onchange="updateCategory(this, 'product-category__2')">
+                                            <option value="0" selected>Select category</option>
+                                            @foreach(var category in Model.Categories)
+                                            {
+                                                <option value="@category.Id">@category.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="col">
+                                        <select id="product-category__2" class="form-select fs-4" onchange="updateCategory(this, 'product-category__3')">
+                                        </select>
+                                    </div>
+
+                                    <div class="col">
+                                        <select id="product-category__3" class="form-select fs-4" onchange="updateCategory(this, null)">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Color -->
+                        <div class="row mb-5">
+                            <div class="col-4">
+                                <h2 class="product-info__title lv-2">
+                                    Product Color
+                                    <span class="text-danger">*</span>
+                                </h2>
+                            </div>
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="input-group">
+                                                    <input type="text" id="name-color"
+                                                           class="form-control fs-4 fw-semibold"
+                                                           placeholder="Name">
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="input-group">
+                                                    <input type="text" id="price-plus-color"
+                                                           class="form-control fs-4 fw-semibold"
+                                                           placeholder="Price Plus">
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="input-group">
+                                                    <input type="text" id="quantity-color"
+                                                           class="form-control fs-4 fw-semibold"
+                                                           placeholder="Quantity">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <button class="btn btn-primary fs-4 w-100"
+                                                onclick="addColor()">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- List Color -->
+                                <div class="product-info__color--list mt-4 overflow-y-scroll"
+                                     style="max-height: 100px;">
+                                    <table class="table product-info__color--table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="fw-bold">#</th>
+                                                <th scope="col" class="fw-bold">Color Name</th>
+                                                <th scope="col" class="fw-bold">Price Plus</th>
+                                                <th scope="col" class="fw-bold">Quantity</th>
+                                                <th scope="col" class="fw-bold">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Option -->
+                        <div class="row mb-5">
+                            <div class="col-4">
+                                <h2 class="product-info__title lv-2">
+                                    Product Option
+                                    <span class="text-danger">*</span>
+                                </h2>
+                            </div>
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <select id="product-info__option--type"
+                                                        class="form-select fs-4">
+                                                    <option selected value="dungluong">Dung lượng</option>
+                                                    <option value="tinhtrang">Tình trạng</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-4">
+                                                <select id="product-select__color--option"
+                                                        class="form-select fs-4">
+                                                </select>
+                                            </div>
+
+                                            <div class="col-4">
+                                                <div class="input-group">
+                                                    <input type="text" id="option-value"
+                                                           class="form-control fs-4 fw-semibold"
+                                                           placeholder="Value">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-4 mt-3">
+                                                <div class="input-group">
+                                                    <input type="text" id="price-plus-option"
+                                                           class="form-control fs-4 fw-semibold"
+                                                           placeholder="Price Plus">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-4 mt-3">
+                                                <div class="input-group">
+                                                    <input type="text" id="quantity-option"
+                                                           class="form-control fs-4 fw-semibold"
+                                                           placeholder="Quantity">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <button class="btn btn-primary fs-4 w-100"
+                                                onclick="addOption()">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- List Option -->
+                                <div class="product-info__option--list mt-4 overflow-y-scroll"
+                                     style="max-height: 100px;">
+                                    <table class="table product-info__option--table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="fw-bold">Type</th>
+                                                <th scope="col" class="fw-bold">Value</th>
+                                                <th scope="col" class="fw-bold">Price Plus</th>
+                                                <th scope="col" class="fw-bold">Quantity</th>
+                                                <th scope="col" class="fw-bold">Color</th>
+                                                <th scope="col" class="fw-bold">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Address shop -->
+                        <div class="row mb-5">
+                            <div class="col-4">
+                                <h2 class="product-info__title lv-2">
+                                    Product Address
+                                    <span class="text-danger">*</span>
+                                </h2>
+                            </div>
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <select id="product-info__address--color"
+                                                        class="form-select fs-4"
+                                                        onchange="onChangeProductAddressColorSelect('product-info__address--option', this)">
+                                                    <option selected value="0">Select color</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-4">
+                                                <select id="product-info__address--option"
+                                                        class="form-select fs-4">
+                                                    <option selected value="0">Select option</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-4">
+                                                <select id="product-info__address--shop"
+                                                        class="form-select fs-4">
+                                                    <option value="0">Select address shop</option>
+                                                    @foreach (var address in Model.AddressShops)
+                                                    {
+                                                        <option value="@address.Id">@address.Address</option>
+                                                    }
+                                                </select>
+                                            </div>
+
+                                            <div class="col-4 mt-3">
+                                                <div class="input-group">
+                                                    <input type="text" id="product-info__address--quantity"
+                                                           class="form-control fs-4 fw-semibold"
+                                                           placeholder="Quantity">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <button class="btn btn-primary fs-4 w-100"
+                                                onclick="addProductAddress()">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- List Product Address -->
+                                <div class="product-info__address--list mt-4 overflow-y-scroll"
+                                     style="max-height: 100px;">
+                                    <table class="table product-info__address--table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="fw-bold">Color</th>
+                                                <th scope="col" class="fw-bold">Type</th>
+                                                <th scope="col" class="fw-bold">Value</th>
+                                                <th scope="col" class="fw-bold">Quantity</th>
+                                                <th scope="col" class="fw-bold">Address Shop</th>
+                                                <th scope="col" class="fw-bold">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="product-info__step--body product-step__body--2">
+                        <textarea name="description" id="product-description" cols="30" rows="10" class="w-100" placeholder="Description"></textarea>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="product-info__step--body product-step__body--3">
+                        <!-- Price / Discount -->
+                        <div class="row mb-5">
+                            <div class="col-4">
+                                <h2 class="product-info__title lv-2">
+                                    Product Price / Discount
+                                    <span class="text-danger">*</span>
+                                </h2>
+                            </div>
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input type="text" id="product-price" class="form-control fs-4 fw-semibold"
+                                                   placeholder="Enter Product Price">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input type="text" id="product-discount" class="form-control fs-4 fw-semibold"
+                                                   placeholder="Enter Product Discount">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <!-- Preview -->
+            <div class="bg-white product-info__block">
+                <h2 class="product-info__title lv-2">Product Preview</h2>
+                <div class="product-info__preview mt-4">
+                    <div class="product-info__preview--img">
+                        <img src="https://product.hstatic.net/200000713019/product/iphone-13-hai-phong-3_e68d9b753b4340009113006ce7972daf_30e32c9b186944b6aed5de1d596efd2c_large.jpg"
+                             alt=""
+                             class="w-100 h-100 object-fit-cover">
+                    </div>
+                    <div class="product-info__preview--content mt-3">
+                        <h3 class="product-info__preview--name">iPhone 15 Pro Max</h3>
+                        <div>
+                            <ul class="list-variants pt-4">
+                                <li>+6 màu sắc</li>
+                            </ul>
+                        </div>
+                        <div class="box-pro-prices pt-2 d-flex align-items-center gap-4">
+                            <span class="text-danger fw-bold">1.000.000đ</span>
+                            <del class="compare-price d-block">12.000.000đ</del>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Publish -->
+            <div class="bg-white product-info__block mt-4">
+                <h2 class="product-info__title lv-2">Visibility</h2>
+                <div class="form-check pt-4">
+                    <input class="form-check-input" value="publish" type="radio" name="product-visibility" id="publish" checked>
+                    <label class="form-check-label mt-2" for="publish">
+                        Publish
+                    </label>
+                </div>
+                <div class="form-check pt-2">
+                    <input class="form-check-input" value="hidden" type="radio" name="product-visibility" id="hidden">
+                    <label class="form-check-label mt-2" for="hidden">
+                        Hidden
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+<div class="product-info__footer bg-white">
+    <div class="block-actions">
+        <a asp-controller="Product" asp-action="Index" class="btn btn-cancel">Cancel</a>
+        @* <a asp-controller="Product" asp-action="CreateProductPost" asp-route-product="@Model" class="btn btn-save">Save</a> *@
+        <button id="saveButton" class="btn btn-save">Save</button>
+    </div>
+</div>
+
+<script src="~/js/addProduct.js" asp-append-version="true"></script>
+<script type="text/javascript" language="javascript">
+
+    // Display select option category
+    function displayCategorySelect(selectId, categoriesData) {
+        if (selectId === null) return;
+
+        const selectElement = document.getElementById(selectId);
+        selectElement.innerHTML = '';
+
+        if (categoriesData !== null) {
+            selectElement.innerHTML += '<option value="0">Select category</option>';
+
+            categoriesData.forEach(category => {
+                const html = `
+                                        <option value="${category.id}">${category.name}</option>
+                                    `;
+                selectElement.innerHTML += html;
+            })
+        }
+    }
+
+    // Handle when onchange select category
+    function updateCategory(e, selectId) {
+        const categoryId = e.value;
+
+        if (categoryId !== '0') {
+            // Call ajax get category
+            $.ajax({
+                url: '@Url.Action("GetCategoryById", "Product")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(categoryId),
+                success: function (result) {
+                    displayCategorySelect(selectId, result);
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr, status, error);
+                }
+            });
+        } else {
+            displayCategorySelect(selectId, null);
+        }
+    }
+
+    $(document).ready(function () {
+        // Using ajax pass data object to controller
+        $('#saveButton').click(function () {
+            const productData = getInfoProduct();
+
+            $.ajax({
+                url: '@Url.Action("CreateProductPost", "Product")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(productData),
+                success: function (result) {
+                    console.log(result);
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr, status, error);
+                }
+            });
+        });
+    });
+</script>

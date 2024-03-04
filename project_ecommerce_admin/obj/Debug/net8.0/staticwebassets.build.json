@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "lBH7bdGqR5pgxkz9lkr6rR4DmHZHZdFzHvw0zw6SZfI=",
+  "Hash": "c4X1MggFuRiUfL/Q+9QmlnzbyKefHn6TEYyJxousemo=",
   "Source": "project_ecommerce_admin",
   "BasePath": "_content/project_ecommerce_admin",
   "Mode": "Default",
@@ -319,6 +319,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\avatar1.jpg"
+    },
+    {
+      "Identity": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\js\\addProduct.js",
+      "SourceId": "project_ecommerce_admin",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\",
+      "BasePath": "_content/project_ecommerce_admin",
+      "RelativePath": "js/addProduct.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\addProduct.js"
     },
     {
       "Identity": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\js\\index.js",
