@@ -5,7 +5,7 @@ let productImages = [];
 let productAddressShops = [];
 let stepActive = 1;
 const productId = crypto.randomUUID();
-let productName;
+let productName, productPrice, productDiscount;
 
 // Display images
 function displayProductImage(productImages) {
@@ -339,6 +339,48 @@ function removeProductAddress(productAddressId) {
     displayProductAddressTable(productAddressShops);
 }
 
+// Product preview
+function displayProductPreview() {
+    const previewElement = document.querySelector('.product-info__preview');
+    productName = document.getElementById('product-name').value;
+    productPrice = document.getElementById('product-price').value;
+    const productPriceFormat = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    }).format(productPrice);
+
+    productDiscount = document.getElementById('product-discount').value;
+
+    const productPriceSale = productPrice - (productPrice * (productDiscount / 100));
+    const productPriceSaleFormat = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    }).format(productPriceSale);
+
+    if (productImages.length > 0 && productName && productColors.length > 0 && productPrice) {
+        const html = `
+            <div class="product-info__preview--img">
+                <img src="${productImages[0].src}"
+                     alt=""
+                     class="w-100 h-100 object-fit-cover">
+            </div>
+            <div class="product-info__preview--content mt-3">
+                <h3 class="product-info__preview--name">${productName}</h3>
+                <div>
+                    <ul class="list-variants pt-4">
+                        <li>+${productColors.length} màu sắc</li>
+                    </ul>
+                </div>
+                <div class="box-pro-prices pt-2 d-flex align-items-center gap-4">
+                    <span class="text-danger fw-bold">${productPriceSaleFormat}</span>
+                    <del class="compare-price d-block">${productPriceFormat}</del>
+                </div>
+            </div>
+        `;
+        previewElement.innerHTML = html;
+    }
+}
+
 // Handle show / hidden step
 function showStepBodyActive(stepActive) {
     // Remove all class show step body
@@ -377,8 +419,8 @@ function getInfoProduct() {
     const categoryId = document.getElementById('product-category__3').value;
     productName = document.getElementById('product-name').value;
     const productDescription = document.getElementById('product-description').value;
-    const productPrice = document.getElementById('product-price').value;
-    const productDiscount = document.getElementById('product-discount').value;
+    productPrice = document.getElementById('product-price').value;
+    productDiscount = document.getElementById('product-discount').value;
     const productVisibility = document.querySelector('input[name="product-visibility"]:checked').value;
     let isPublish = productVisibility === 'publish' ? true : false;
 
