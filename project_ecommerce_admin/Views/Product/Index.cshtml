@@ -1,5 +1,11 @@
-﻿@{
+﻿@using System.Globalization
+@using project_ecommerce_admin.DTOs.Product;
+@model List<ProductDto>;
+
+@{
     ViewData["Title"] = "Products";
+    CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");   // Format product price to vnd
+    int stt = 0;            // Stt start table
 }
 
 <!-- Breadcrumb -->
@@ -11,7 +17,6 @@
         <li class="breadcrumb-item active" aria-current="page">Products</li>
     </ol>
 </nav>
-<h1 class="main-title fw-semibold">Products</h1>
 <!-- List product -->
 <div class="block-content mt-5">
     <!-- Header -->
@@ -37,35 +42,150 @@
     </div>
     <!-- Table product -->
     <div class="table-block mt-5">
-        <table class="table">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Email Address</th>
-            </tr>
-            <tr>
-                <th scope="row">1</th>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <img src="~/images/avatar1.jpg" alt="">
-                        <span class="ms-3">Product 1</span>
-                    </div>
-                </td>
-                <td>Nyakundi</td>
-                <td>tables@mail.com</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <img src="~/images/avatar1.jpg" alt="">
-                        <span class="ms-3">Product 2</span>
-                    </div>
-                </td>
-                <td>Mak</td>
-                <td>developer@mail.com</td>
-            </tr>
+        <table class="table table-list__product">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Discount</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(Model.Count > 0)
+                {
+                    @foreach (var product in Model)
+                    {
+                        stt++;
+                        if (stt > 10) break;
+                        <tr>
+                            <th scope="row">@stt</th>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="@product.Images[0].Src" alt="@product.Name">
+                                    <span class="ms-3">@product.Name</span>
+                                </div>
+                            </td>
+                            <td>@product.Brand.Name</td>
+                            <td>@product.Category.Name</td>
+                            <td>@product.Quantity</td>
+                            <td>@product.Discount</td>
+                            <td>
+                                @product.Price.ToString("#,###", cul.NumberFormat) VND
+                            </td>
+                            <td>
+                                <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-primary-2 p-lg-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                                        <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001" />
+                                    </svg>
+                                </a>
+                                <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger p-lg-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
         </table>
     </div>
+    <!-- Bottom -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <!-- Text -->
+        <div>
+            <p class="fs-4">Show @stt in @Model.Count products</p>
+        </div>
+        <!-- Pagination -->
+        <nav aria-label="Page navigation product">
+            <ul class="pagination">
+            </ul>
+        </nav>
+    </div>
 </div>
+
+<script asp-append-version="true">
+    // Serialize the Model object to JSON
+    const products = @Html.Raw(Json.Serialize(Model));
+    let pageActive = 1;     // Current page
+    let pageCount = Math.ceil(products.length / 10);
+
+    // Show pagination view
+    function displayPaginationView(pageActive) {
+        const paginationElement = document.querySelector('.pagination');
+        if (paginationElement) {
+            paginationElement.innerHTML = '';
+            let i = 1;
+            for (i; i <= pageCount; ++i) {
+                const paginationItem = `
+                    <li class="page-item ${pageActive == i ? 'active' : ''}" onclick="HandlePagination(${i})">
+                        <button class="page-link">${i}</button>
+                    </li>
+                `;
+                paginationElement.innerHTML += paginationItem;
+            }
+        }
+    }
+
+    function HandlePagination(pageNumber) {
+        const tableProductElement = document.querySelector('.table-list__product');
+        const tableTbody = tableProductElement.querySelector('tbody');
+
+        if (tableTbody) {
+            tableTbody.innerHTML = '';
+            pageActive = pageNumber;        // Update page active
+
+            // Get product by page active
+            let startIndex = (pageNumber * 10) - 10 + 1;
+            let endIndex = pageNumber * 10;
+            for (startIndex; startIndex <= endIndex; ++startIndex) {
+                if (startIndex > products.length) return;
+                
+                // Handle
+                const product = products[startIndex - 1];
+                let productPriceFormat = product.price.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })
+
+                const trNode = `
+                    <tr>
+                        <th scope="row">${startIndex}</th>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="${product.images[0].src}" alt="${product.name}">
+                                <span class="ms-3">${product.name}</span>
+                            </div>
+                        </td>
+                        <td>${product.brand.name}</td>
+                        <td>${product.category.name}</td>
+                        <td>${product.quantity}</td>
+                        <td>${product.discount}</td>
+                        <td>
+                            ${productPriceFormat}
+                        </td>
+                        <td>
+                            <a href="/Product/Edit/${product.id}" class="btn btn-primary-2 p-lg-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001" />
+                                </svg>
+                            </a>
+                            <a href="/Product/Delete/${product.id}" class="btn btn-danger p-lg-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                                </svg>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+                tableTbody.innerHTML += trNode;
+            }
+            // Display pagination view
+            displayPaginationView(pageActive);
+        }
+    }
+
+    displayPaginationView(pageCount, pageActive);
+</script>

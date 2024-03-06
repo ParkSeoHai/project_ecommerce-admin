@@ -33,9 +33,10 @@ namespace project_ecommerce_admin.Controllers
 
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var products = await GetAllProducts();
+            return View(products);
         }
 
         [HttpGet]
@@ -43,31 +44,6 @@ namespace project_ecommerce_admin.Controllers
         {
             var data = await GetDataCreateView();
             return View(data);
-        }
-
-        // Get data view create product
-        public async Task<ProductAddViewDto> GetDataCreateView()
-        {
-            var categoriesLevel = await _categoryService.GetCategoryByLevelAsync(1);
-            var brands = await _brandService.GetAllBrandsAsync();
-            var addressShops = await _addressShopService.GetAllDataAsync();
-
-            ProductAddViewDto productAddView = new ProductAddViewDto()
-            {
-                Categories = categoriesLevel,
-                Brands = brands,
-                AddressShops = addressShops
-            };
-
-            return productAddView;
-        }
-
-        // Get category when onchange select from create view
-        [HttpPost]
-        public async Task<IActionResult> GetCategoryById([FromBody] string categoryId)
-        {
-            var categories = await _categoryService.GetCategoryByCategoryIdAsync(categoryId);
-            return Ok(categories);
         }
 
         [HttpPost]
@@ -181,6 +157,37 @@ namespace project_ecommerce_admin.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        // Get category when onchange select from create view
+        [HttpPost]
+        public async Task<IActionResult> GetCategoryById([FromBody] string categoryId)
+        {
+            var categories = await _categoryService.GetCategoryByCategoryIdAsync(categoryId);
+            return Ok(categories);
+        }
+
+        // Get data view create product
+        public async Task<ProductAddViewDto> GetDataCreateView()
+        {
+            var categoriesLevel = await _categoryService.GetCategoryByLevelAsync(1);
+            var brands = await _brandService.GetAllBrandsAsync();
+            var addressShops = await _addressShopService.GetAllDataAsync();
+
+            ProductAddViewDto productAddView = new ProductAddViewDto()
+            {
+                Categories = categoriesLevel,
+                Brands = brands,
+                AddressShops = addressShops
+            };
+
+            return productAddView;
+        }
+
+        // Get all product from database
+        public async Task<List<ProductDto>> GetAllProducts()
+        {
+            return await _productService.GetAllProductsAsync();
         }
 
         // Add product to database
