@@ -66,7 +66,7 @@
                             <th scope="row">@stt</th>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="@product.Images[0].Src" alt="@product.Name">
+                                    <img src="@product.DefaultImage" alt="@product.Name">
                                     <span class="ms-3">@product.Name</span>
                                 </div>
                             </td>
@@ -123,7 +123,7 @@
             let i = 1;
             for (i; i <= pageCount; ++i) {
                 const paginationItem = `
-                    <li class="page-item ${pageActive == i ? 'active' : ''}" onclick="HandlePagination(${i})">
+                    <li class="page-item ${pageActive == i ? 'active' : ''}" onclick="handlePagination(${i})">
                         <button class="page-link">${i}</button>
                     </li>
                 `;
@@ -132,7 +132,7 @@
         }
     }
 
-    function HandlePagination(pageNumber) {
+    function handlePagination(pageNumber) {
         const tableProductElement = document.querySelector('.table-list__product');
         const tableTbody = tableProductElement.querySelector('tbody');
 
@@ -155,7 +155,7 @@
                         <th scope="row">${startIndex}</th>
                         <td>
                             <div class="d-flex align-items-center">
-                                <img src="${product.images[0].src}" alt="${product.name}">
+                                <img src="${product.defaultImage}" alt="${product.name}">
                                 <span class="ms-3">${product.name}</span>
                             </div>
                         </td>

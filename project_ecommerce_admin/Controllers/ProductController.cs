@@ -15,12 +15,13 @@ namespace project_ecommerce_admin.Controllers
         private readonly IProductColor _productColorService;
         private readonly IProductOption _productOptionService;
         private readonly IProductAddressShop _productAddressShopService;
+        private readonly IProductProperty _productPropertyService;
 
         public ProductController(ICategory categoryService,
             IBrand brandService, IAddressShop addressShopService,
             IProduct productService, IProductImage productImageService,
             IProductColor productColorService, IProductOption productOptionService,
-            IProductAddressShop productAddressShopService)
+            IProductAddressShop productAddressShopService, IProductProperty productPropertyService)
         {
             this._categoryService = categoryService;
             this._brandService = brandService;
@@ -30,7 +31,7 @@ namespace project_ecommerce_admin.Controllers
             this._productColorService = productColorService;
             this._productOptionService = productOptionService;
             this._productAddressShopService = productAddressShopService;
-
+            this._productPropertyService = productPropertyService;
         }
 
         public async Task<IActionResult> Index()
@@ -47,11 +48,11 @@ namespace project_ecommerce_admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductPost([FromBody] ProductAddDto productAddDto)
+        public async Task<string> CreateProductPost([FromBody] ProductAddDto productAddDto)
         {
             if (productAddDto == null)
             {
-                return BadRequest("Product data is null or invalid.");
+                return "Product data is null or invalid.";
             }
 
             try
@@ -65,6 +66,7 @@ namespace project_ecommerce_admin.Controllers
                     Price = productAddDto.Price,
                     Discount = productAddDto.Discount,
                     Quantity = productAddDto.Quantity,
+                    DefaultImage = productAddDto.DefaultImage,
                     Publish = productAddDto.Publish,
                     CreatedDate = DateTime.Now,
                     UpdatedDate = DateTime.Now,
@@ -80,14 +82,7 @@ namespace project_ecommerce_admin.Controllers
                     // Add product image
                     foreach (var image in productAddDto.Images)
                     {
-                        Image productImage = new Image()
-                        {
-                            Id = image.Id,
-                            Src = image.Src,
-                            ProductId = image.ProductId
-                        };
-
-                        bool isAddProductImage = await AddProductImageToDb(productImage);
+                        bool isAddProductImage = await AddProductImageToDb(image);
                         if (isAddProductImage == false)
                         {
                             await RemoveProductDb(product.Id);
@@ -97,16 +92,7 @@ namespace project_ecommerce_admin.Controllers
                     // Add product color
                     foreach (var color in productAddDto.Colors)
                     {
-                        Color productColor = new Color()
-                        {
-                            Id = color.Id,
-                            Name = color.Name,
-                            PricePlus = color.PricePlus,
-                            Quantity = color.Quantity,
-                            ProductId = color.ProductId
-                        };
-
-                        bool isAddProductColor = await AddProductColorToDb(productColor);
+                        bool isAddProductColor = await AddProductColorToDb(color);
                         if (isAddProductColor == false)
                         {
                             await RemoveProductDb(product.Id);
@@ -116,17 +102,7 @@ namespace project_ecommerce_admin.Controllers
                     // Add product option
                     foreach (var option in productAddDto.Options)
                     {
-                        Option productOption = new Option()
-                        {
-                            Id = option.Id,
-                            Name = option.Name,
-                            Value = option.Value,
-                            PricePlus = option.PricePlus,
-                            Quantity = option.Quantity,
-                            ColorId = option.ColorId
-                        };
-
-                        bool isAddProductOption = await AddProductOptionToDb(productOption);
+                        bool isAddProductOption = await AddProductOptionToDb(option);
                         if (isAddProductOption == false)
                         {
                             await RemoveProductDb(product.Id);
@@ -136,26 +112,31 @@ namespace project_ecommerce_admin.Controllers
                     // Add product address shop
                     foreach (var productShop in productAddDto.ProductShops)
                     {
-                        ProductShop productAddressShop = new ProductShop()
-                        {
-                            OptionId = productShop.OptionId,
-                            AddressShopId = productShop.AddressShopId,
-                            Quantity = productShop.Quantity
-                        };
-
-                        bool isAddProductShop = await AddProductAddressShopToDb(productAddressShop);
+                        bool isAddProductShop = await AddProductAddressShopToDb(productShop);
                         if (isAddProductShop == false)
                         {
                             await RemoveProductDb(product.Id);
                             break;
                         }
                     }
+                    // Add product property
+                    foreach (var property in productAddDto.Properties)
+                    {
+                        bool isAddProperty = await AddPropertyToDb(property);
+                        if (isAddProperty == false)
+                        {
+                            await RemoveProductDb(product.Id);
+                            break;
+                        }
+                    }
+                    
+                    return "Product created successfully.";
                 }
-                return Ok("Product created successfully.");
+                return "Create product failed.";
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return ex.Message;
             }
         }
 
@@ -230,6 +211,12 @@ namespace project_ecommerce_admin.Controllers
         public async Task<bool> AddProductAddressShopToDb(ProductShop productShop)
         {
             return await _productAddressShopService.AddProductAddressShopToDbAsync(productShop);
+        }
+
+        // Add product property to database
+        public async Task<bool> AddPropertyToDb(Property property)
+        {
+            return await _productPropertyService.AddPropertyAsync(property);
         }
     }
 }

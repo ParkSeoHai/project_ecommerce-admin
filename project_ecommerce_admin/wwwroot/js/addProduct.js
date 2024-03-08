@@ -3,18 +3,33 @@ let productColors = [];
 let productOptions = [];
 let productImages = [];
 let productAddressShops = [];
+let productProperties = [];
 let stepActive = 1;
 const productId = crypto.randomUUID();
 let productName, productPrice, productDiscount;
+
+let productImageActive = '';
+
+// Format number to VND
+function formatToVND(number) {
+    const numberFormat = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    }).format(number);
+    return numberFormat;
+}
 
 // Display images
 function displayProductImage(productImages) {
     const productImageElement = document.querySelector('.product-info__image');
     productImageElement.innerHTML = '';
 
+    if (productImageActive === '') productImageActive = productImages[0].id;
+
     productImages.forEach(image => {
         const productImageItem = `
-            <div class="product-info__image--item">
+            <div class="product-info__image--item ${productImageActive == image.id ? 'active' : ''}"
+                onclick="setImageActive('${image.id}')">
                 <img src="${image.src}"
                      alt="">
             </div>
@@ -22,6 +37,11 @@ function displayProductImage(productImages) {
 
         productImageElement.innerHTML += productImageItem;
     })
+}
+
+function setImageActive(imageId) {
+    productImageActive = imageId;
+    displayProductImage(productImages);
 }
 
 // Images upload to cloudinary
@@ -90,16 +110,16 @@ function displayProductColor(productColors) {
     let count = 1;
     productColors.forEach(color => {
         const html = `
-                        <tr>
-                            <th scope="row">${count}</th>
-                            <td>${color.name}</td>
-                            <td>${color.pricePlus}</td>
-                            <td>${color.quantity}</td>
-                            <td>
-                                <span class="text-danger fw-semibold" onclick="removeColor('${color.id}')" style="cursor: pointer;">Delete</span>
-                            </td>
-                        </tr>
-                    `;
+            <tr>
+                <th scope="row">${count}</th>
+                <td>${color.name}</td>
+                <td>${formatToVND(color.price)}</td>
+                <td>${color.quantity}</td>
+                <td>
+                    <span class="text-danger fw-semibold" onclick="removeColor('${color.id}')" style="cursor: pointer;">Delete</span>
+                </td>
+            </tr>
+        `;
         ++count;
         tableColorElement.innerHTML += html;
     });
@@ -108,15 +128,15 @@ function displayProductColor(productColors) {
 
 function addColor() {
     const nameColor = document.getElementById('name-color').value;
-    const pricePlusColor = document.getElementById('price-plus-color').value;
+    const priceColor = document.getElementById('price-color').value;
     const quantityColor = document.getElementById('quantity-color').value;
 
-    if (nameColor.trim() !== '' && pricePlusColor.trim() !== '' && quantityColor.trim() !== '') {
+    if (nameColor.trim() !== '' && priceColor.trim() !== '' && quantityColor.trim() !== '') {
         const color = {
             // id: productColors.length > 0 ? productColors[productColors.length - 1].id + 1 : 1,
             id: crypto.randomUUID(),
             name: nameColor,
-            pricePlus: pricePlusColor,
+            price: priceColor,
             quantity: quantityColor,
             productId: productId
         }
@@ -175,17 +195,17 @@ function displayProductOptionTable(productOptions) {
         })
 
         const html = `
-                        <tr>
-                            <th scope="row">${option.name}</th>
-                            <td>${option.value}</td>
-                            <td>${option.pricePlus}</td>
-                            <td>${option.quantity}</td>
-                            <td>${colorName}</td>
-                            <td>
-                                <span class="text-danger fw-semibold" onclick="removeOption('${option.id}')" style="cursor: pointer;">Delete</span>
-                            </td>
-                        </tr>
-                    `;
+            <tr>
+                <th scope="row">${option.name}</th>
+                <td>${option.value}</td>
+                <td>${formatToVND(option.price)}</td>
+                <td>${option.quantity}</td>
+                <td>${colorName}</td>
+                <td>
+                    <span class="text-danger fw-semibold" onclick="removeOption('${option.id}')" style="cursor: pointer;">Delete</span>
+                </td>
+            </tr>
+        `;
         tableOptionElement.innerHTML += html;
     });
 }
@@ -193,18 +213,18 @@ function displayProductOptionTable(productOptions) {
 function addOption() {
     const typeOption = document.getElementById('product-info__option--type').value;
     const valueOption = document.getElementById('option-value').value;
-    const pricePlusOption = document.getElementById('price-plus-option').value;
+    const priceOption = document.getElementById('price-option').value;
     const quantityOption = document.getElementById('quantity-option').value;
     const colorIdOption = document.getElementById('product-select__color--option').value;
 
-    if (valueOption.trim() !== '' && pricePlusOption.trim() !== ''
+    if (valueOption.trim() !== '' && priceOption.trim() !== ''
         && quantityOption.trim() !== '' && colorIdOption !== '0') {
         const option = {
             // id: productOptions.length > 0 ? productOptions[productOptions.length - 1].id + 1: 1,
             id: crypto.randomUUID(),
             name: typeOption,   // or type
             value: valueOption,
-            pricePlus: pricePlusOption,
+            price: priceOption,
             quantity: quantityOption,
             colorId: colorIdOption
         }
@@ -235,17 +255,17 @@ function displayProductAddressTable(productAddressShops) {
     if (productAddressShops.length > 0) {
         productAddressShops.forEach(productAddress => {
             const html = `
-                        <tr>
-                            <th scope="row">${productAddress.colorName}</th>
-                            <td>${productAddress.type}</td>
-                            <td>${productAddress.value}</td>
-                            <td>${productAddress.quantity}</td>
-                            <td>${productAddress.address}</td>
-                            <td>
-                                <span class="text-danger fw-semibold" onclick="removeProductAddress('${productAddress.id}')" style="cursor: pointer;">Delete</span>
-                            </td>
-                        </tr>
-                    `;
+                <tr>
+                    <th scope="row">${productAddress.colorName}</th>
+                    <td>${productAddress.type}</td>
+                    <td>${productAddress.value}</td>
+                    <td>${productAddress.quantity}</td>
+                    <td>${productAddress.address}</td>
+                    <td>
+                        <span class="text-danger fw-semibold" onclick="removeProductAddress('${productAddress.id}')" style="cursor: pointer;">Delete</span>
+                    </td>
+                </tr>
+            `;
             tableElement.innerHTML += html;
         });
     }
@@ -339,29 +359,81 @@ function removeProductAddress(productAddressId) {
     displayProductAddressTable(productAddressShops);
 }
 
+// Product property
+function displayProperties(productProperties) {
+    const tableTbodyElement = document.querySelector('.product-info__property--table tbody');
+    if (tableTbodyElement) {
+        tableTbodyElement.innerHTML = '';
+
+        let index = 1;
+        productProperties.forEach(property => {
+            const trElement = `
+                <tr>
+                    <th scope="row">${index}</th>
+                    <td>${property.name}</td>
+                    <td>${property.value}</td>
+                    <td>
+                        <span class="text-danger fw-semibold" onclick="removeProperty('${property.id}')" style="cursor: pointer;">Delete</span>
+                    </td>
+                </tr>
+            `;
+
+            index++;
+            tableTbodyElement.innerHTML += trElement;
+        });
+    }
+}
+
+function addProperty() {
+    const propertyName = document.getElementById('property-name').value;
+    const propertyValue = document.getElementById('property-value').value;
+
+    productProperties.push({
+        id: crypto.randomUUID(),
+        name: propertyName,
+        value: propertyValue,
+        productId: productId
+    });
+    // Display table
+    displayProperties(productProperties);
+}
+
+function removeProperty(propertyId) {
+    let propertiesNew = [];
+
+    productProperties.forEach(property => {
+        if (property.id !== propertyId) {
+            propertiesNew.push(property);
+        }
+    });
+    productProperties = propertiesNew;
+    // Display table
+    displayProperties(productProperties);
+}
+
 // Product preview
 function displayProductPreview() {
     const previewElement = document.querySelector('.product-info__preview');
     productName = document.getElementById('product-name').value;
     productPrice = document.getElementById('product-price').value;
-    const productPriceFormat = new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-    }).format(productPrice);
 
+    // Calc product price sale and format
     productDiscount = document.getElementById('product-discount').value;
-
     const productPriceSale = productPrice - (productPrice * (productDiscount / 100));
-    const productPriceSaleFormat = new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-    }).format(productPriceSale);
+
+    // Get src image default
+    let srcDefaultImage;
+    productImages.forEach(image => {
+        if (image.id === productImageActive) {
+            srcDefaultImage = image.src;
+        }
+    });
 
     if (productImages.length > 0 && productName && productColors.length > 0 && productPrice) {
         const html = `
             <div class="product-info__preview--img">
-                <img src="${productImages[0].src}"
-                     alt=""
+                <img src="${srcDefaultImage}"
+                     alt="${productName}"
                      class="w-100 h-100 object-fit-cover">
             </div>
             <div class="product-info__preview--content mt-3">
@@ -372,8 +444,8 @@ function displayProductPreview() {
                     </ul>
                 </div>
                 <div class="box-pro-prices pt-2 d-flex align-items-center gap-4">
-                    <span class="text-danger fw-bold">${productPriceSaleFormat}</span>
-                    <del class="compare-price d-block">${productPriceFormat}</del>
+                    <span class="text-danger fw-bold">${formatToVND(productPriceSale)}</span>
+                    <del class="compare-price d-block">${formatToVND(productPrice)}</del>
                 </div>
             </div>
         `;
@@ -423,11 +495,18 @@ function getInfoProduct() {
     productDiscount = document.getElementById('product-discount').value;
     const productVisibility = document.querySelector('input[name="product-visibility"]:checked').value;
     let isPublish = productVisibility === 'publish' ? true : false;
-
+    // Product quantity calc from quantity each product color
     let productQuantity = 0;
     productColors.forEach(color => {
         productQuantity += Number.parseInt(color.quantity);
     })
+    // Get image default
+    let imageDefaultSrc = '';
+    productImages.forEach(image => {
+        if (image.id === productImageActive) {
+            imageDefaultSrc = image.src;
+        }
+    });
 
     return productInfo = {
         id: productId,
@@ -440,9 +519,11 @@ function getInfoProduct() {
         quantity: productQuantity,
         publish: isPublish,
         images: productImages,
+        defaultImage: imageDefaultSrc,
         colors: productColors,
         options: productOptions,
-        productShops: productAddressShops
+        productShops: productAddressShops,
+        properties: productProperties
     }
 }
 

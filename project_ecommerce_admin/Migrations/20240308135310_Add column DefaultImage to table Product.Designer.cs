@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using project_ecommerce_admin.Data;
 
@@ -11,9 +12,11 @@ using project_ecommerce_admin.Data;
 namespace project_ecommerce_admin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240308135310_Add column DefaultImage to table Product")]
+    partial class AddcolumnDefaultImagetotableProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,7 +149,7 @@ namespace project_ecommerce_admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<double>("Price")
+                    b.Property<double>("PricePlus")
                         .HasColumnType("float");
 
                     b.Property<Guid>("ProductId")
@@ -369,7 +372,7 @@ namespace project_ecommerce_admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<double>("Price")
+                    b.Property<double>("PricePlus")
                         .HasColumnType("float");
 
                     b.Property<int>("Quantity")

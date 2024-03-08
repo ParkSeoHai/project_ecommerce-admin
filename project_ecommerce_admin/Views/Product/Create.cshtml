@@ -165,9 +165,9 @@
 
                                             <div class="col">
                                                 <div class="input-group">
-                                                    <input type="text" id="price-plus-color"
+                                                    <input type="text" id="price-color"
                                                            class="form-control fs-4 fw-semibold"
-                                                           placeholder="Price Plus">
+                                                           placeholder="Price">
                                                 </div>
                                             </div>
 
@@ -189,14 +189,13 @@
                                     </div>
                                 </div>
                                 <!-- List Color -->
-                                <div class="product-info__color--list mt-4 overflow-y-scroll"
-                                     style="max-height: 100px;">
+                                <div class="product-info__color--list product-info__scroll mt-4">
                                     <table class="table product-info__color--table mb-0">
                                         <thead>
                                             <tr>
                                                 <th scope="col" class="fw-bold">#</th>
                                                 <th scope="col" class="fw-bold">Color Name</th>
-                                                <th scope="col" class="fw-bold">Price Plus</th>
+                                                <th scope="col" class="fw-bold">Price</th>
                                                 <th scope="col" class="fw-bold">Quantity</th>
                                                 <th scope="col" class="fw-bold">Actions</th>
                                             </tr>
@@ -242,9 +241,9 @@
 
                                             <div class="col-4 mt-3">
                                                 <div class="input-group">
-                                                    <input type="text" id="price-plus-option"
+                                                    <input type="text" id="price-option"
                                                            class="form-control fs-4 fw-semibold"
-                                                           placeholder="Price Plus">
+                                                           placeholder="Price">
                                                 </div>
                                             </div>
 
@@ -266,14 +265,13 @@
                                     </div>
                                 </div>
                                 <!-- List Option -->
-                                <div class="product-info__option--list mt-4 overflow-y-scroll"
-                                     style="max-height: 100px;">
+                                <div class="product-info__option--list product-info__scroll mt-4">
                                     <table class="table product-info__option--table mb-0">
                                         <thead>
                                             <tr>
                                                 <th scope="col" class="fw-bold">Type</th>
                                                 <th scope="col" class="fw-bold">Value</th>
-                                                <th scope="col" class="fw-bold">Price Plus</th>
+                                                <th scope="col" class="fw-bold">Price</th>
                                                 <th scope="col" class="fw-bold">Quantity</th>
                                                 <th scope="col" class="fw-bold">Color</th>
                                                 <th scope="col" class="fw-bold">Actions</th>
@@ -340,8 +338,7 @@
                                     </div>
                                 </div>
                                 <!-- List Product Address -->
-                                <div class="product-info__address--list mt-4 overflow-y-scroll"
-                                     style="max-height: 100px;">
+                                <div class="product-info__address--list product-info__scroll mt-4">
                                     <table class="table product-info__address--table mb-0">
                                         <thead>
                                             <tr>
@@ -350,6 +347,59 @@
                                                 <th scope="col" class="fw-bold">Value</th>
                                                 <th scope="col" class="fw-bold">Quantity</th>
                                                 <th scope="col" class="fw-bold">Address Shop</th>
+                                                <th scope="col" class="fw-bold">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Property -->
+                        <div class="row mb-5">
+                            <div class="col-4">
+                                <h2 class="product-info__title lv-2">
+                                    Product Properties
+                                    <span class="text-danger">*</span>
+                                </h2>
+                            </div>
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="input-group">
+                                                    <input type="text" id="property-name"
+                                                           class="form-control fs-4 fw-semibold"
+                                                           placeholder="Name">
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="input-group">
+                                                    <input type="text" id="property-value"
+                                                           class="form-control fs-4 fw-semibold"
+                                                           placeholder="Value">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <button class="btn btn-primary fs-4 w-100"
+                                                onclick="addProperty()">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- List Property -->
+                                <div class="product-info__property--list product-info__scroll mt-4">
+                                    <table class="table product-info__property--table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="fw-bold">#</th>
+                                                <th scope="col" class="fw-bold">Property Name</th>
+                                                <th scope="col" class="fw-bold">Property Value</th>
                                                 <th scope="col" class="fw-bold">Actions</th>
                                             </tr>
                                         </thead>
@@ -482,7 +532,7 @@
         // Using ajax pass data object to controller
         $('#saveButton').click(function () {
             const productData = getInfoProduct();
-
+            console.log(productData);
             $.ajax({
                 url: '@Url.Action("CreateProductPost", "Product")',
                 type: 'POST',

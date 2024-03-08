@@ -20,6 +20,7 @@ builder.Services.AddScoped<IProductImage, ProductImageService>();
 builder.Services.AddScoped<IProductColor, ProductColorService>();
 builder.Services.AddScoped<IProductOption, ProductOptionService>();
 builder.Services.AddScoped<IProductAddressShop, ProductAddressShopService>();
+builder.Services.AddScoped<IProductProperty, ProductPropertyService>();
 
 var app = builder.Build();
 

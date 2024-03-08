@@ -31,15 +31,16 @@ namespace project_ecommerce_admin.Repositories.Service
                     Discount = product.Discount,
                     Quantity = product.Quantity,
                     Publish = product.Publish,
+                    DefaultImage = product.DefaultImage,
                     CreatedDate = product.CreatedDate,
                     CreatedBy = product.CreatedBy,
                     UpdatedDate = product.UpdatedDate,
                     UpdatedBy = product.UpdatedBy
                 };
-                // Get brand, category, image by product id
+
+                // Get brand, category by product id
                 productDto.Brand = await _dbContext.Brands.FirstAsync(b => b.Id == product.BrandId);
                 productDto.Category = await _dbContext.Categories.FirstAsync(c => c.Id == product.CategoryId);
-                productDto.Images = await _dbContext.Images.Where(i => i.ProductId == productDto.Id).ToListAsync();
 
                 // Add to list product dto
                 productDtos.Add(productDto);

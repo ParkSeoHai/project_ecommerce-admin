@@ -13,9 +13,11 @@ namespace project_ecommerce_admin.DTOs.Product
         public int Discount { get; set; }
         public int Quantity { get; set; }
         public bool Publish { get; set; }
+        public string DefaultImage { get; set; }
         public List<Image> Images { get; set; }
         public List<Color> Colors { get; set; }
         public List<Option> Options { get; set; }
         public List<ProductShop> ProductShops { get; set; }
+        public List<Property> Properties { get; set; }
     }
 }

@@ -13,6 +13,8 @@ namespace project_ecommerce_admin.Models
         public double Price { get; set; }
         public int Discount { get; set; }
         public int Quantity { get; set; }
+        [Column(TypeName = "nvarchar(500)")]
+        public string DefaultImage { get; set; }
         public bool Publish { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set;}

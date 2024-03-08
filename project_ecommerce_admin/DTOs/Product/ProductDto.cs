@@ -9,6 +9,7 @@ namespace project_ecommerce_admin.DTOs.Product
         public Models.Brand Brand { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string DefaultImage { get; set; }
         public List<Models.Image> Images { get; set; }
         public double Price { get; set; }
         public int Discount { get; set; }

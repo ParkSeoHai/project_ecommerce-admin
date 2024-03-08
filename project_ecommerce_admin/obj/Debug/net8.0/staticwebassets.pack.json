@@ -29,6 +29,10 @@
       "PackagePath": "staticwebassets\\icons\\bell.svg"
     },
     {
+      "Id": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\icons\\check.svg",
+      "PackagePath": "staticwebassets\\icons\\check.svg"
+    },
+    {
       "Id": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\icons\\dashboard.svg",
       "PackagePath": "staticwebassets\\icons\\dashboard.svg"
     },

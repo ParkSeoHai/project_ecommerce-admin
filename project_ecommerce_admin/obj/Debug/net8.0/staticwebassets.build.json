@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "c4X1MggFuRiUfL/Q+9QmlnzbyKefHn6TEYyJxousemo=",
+  "Hash": "H7xznIaYZA2tlmOFdKyWDHUSk7KZFy7xOWi7G+/Wlaw=",
   "Source": "project_ecommerce_admin",
   "BasePath": "_content/project_ecommerce_admin",
   "Mode": "Default",
@@ -205,6 +205,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\icons\\bell.svg"
+    },
+    {
+      "Identity": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\icons\\check.svg",
+      "SourceId": "project_ecommerce_admin",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\",
+      "BasePath": "_content/project_ecommerce_admin",
+      "RelativePath": "icons/check.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\icons\\check.svg"
     },
     {
       "Identity": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\icons\\dashboard.svg",
