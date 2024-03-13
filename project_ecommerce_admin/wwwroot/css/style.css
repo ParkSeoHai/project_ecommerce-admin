@@ -270,25 +270,31 @@
     cursor: pointer;
 }
 
+.product-info__image--item {
+    position: relative;
+}
+
+.product-info__image--item .btn-delete,
+.product-info__image--item.active .btn-active {
+    display: block;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    line-height: 0;
+}
+
 .product-info__image--item.active {
     position: relative;
     pointer-events: none;
 }
 
-.product-info__image--item.active::after {
-    content: 'V';
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    line-height: 20px;
-    color: #2e9d2e;
-    font-weight: bold;
-    font-size: 1.5rem;
-    background-color: #9aff37;
-    border-radius: 50%;
+.product-info__image--item .btn-active,
+.product-info__image--item.active .btn-delete {
+    display: none;
 }
 
 .product-info__image--item.active img {

@@ -2,7 +2,7 @@
 
 namespace project_ecommerce_admin.DTOs.Product
 {
-    public class ProductAddDto
+    public class ProductPostDto
     {
         public Guid Id { get; set; }
         public Guid CategoryId { get; set; }

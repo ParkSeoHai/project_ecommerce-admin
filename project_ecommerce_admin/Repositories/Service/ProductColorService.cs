@@ -1,4 +1,5 @@
-﻿using project_ecommerce_admin.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using project_ecommerce_admin.Data;
 using project_ecommerce_admin.Models;
 using project_ecommerce_admin.Repositories.Interface;
 
@@ -27,6 +28,30 @@ namespace project_ecommerce_admin.Repositories.Service
             }
         }
 
+        public async Task<List<Color>> GetAllColorByProductIdAsync(Guid productId)
+        {
+            return await _dbContext.Colors.Where(c => c.ProductId == productId).ToListAsync();
+        }
+
+        public async Task<int> RemoveColorByProductIdAsync(Guid productId)
+        {
+            try
+            {
+                var colors = await _dbContext.Colors.Where(c => c.ProductId == productId).ToListAsync();
+                foreach (var color in colors)
+                {
+                    _dbContext.Colors.Remove(color);
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                return colors.Count();
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
         public async Task<bool> RemoveProductColorInDbAsync(Guid productColorId)
         {
             try
@@ -39,6 +64,20 @@ namespace project_ecommerce_admin.Repositories.Service
                     return true;
                 }
                 return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateProductColorAsync(Color productColor)
+        {
+            try
+            {
+                _dbContext.Colors.Update(productColor);
+                await _dbContext.SaveChangesAsync();
+                return true;
             }
             catch (Exception)
             {

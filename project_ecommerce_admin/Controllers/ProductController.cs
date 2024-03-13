@@ -36,7 +36,7 @@ namespace project_ecommerce_admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = await GetAllProducts();
+            var products = await _productService.GetAllProductsAsync();
             return View(products);
         }
 
@@ -48,7 +48,7 @@ namespace project_ecommerce_admin.Controllers
         }
 
         [HttpPost]
-        public async Task<string> CreateProductPost([FromBody] ProductAddDto productAddDto)
+        public async Task<string> CreateProductPost([FromBody] ProductPostDto productAddDto)
         {
             if (productAddDto == null)
             {
@@ -76,63 +76,190 @@ namespace project_ecommerce_admin.Controllers
                     BrandId = productAddDto.BrandId
                 };
 
-                bool isAddProduct = await AddProductToDb(product);
+                bool isAddProduct = await _productService.AddProductToDbAsync(product);
                 if (isAddProduct)
                 {
                     // Add product image
                     foreach (var image in productAddDto.Images)
                     {
-                        bool isAddProductImage = await AddProductImageToDb(image);
+                        bool isAddProductImage = await _productImageService.AddProductImageToDbAsync(image);
                         if (isAddProductImage == false)
                         {
-                            await RemoveProductDb(product.Id);
-                            break;
+                            await _productService.RemoveProductInDbAsync(product.Id);
+                            return "Create product image failed.";
                         }
                     }
                     // Add product color
                     foreach (var color in productAddDto.Colors)
                     {
-                        bool isAddProductColor = await AddProductColorToDb(color);
+                        bool isAddProductColor = await _productColorService.AddProductColorToDbAsync(color);
                         if (isAddProductColor == false)
                         {
-                            await RemoveProductDb(product.Id);
-                            break;
+                            await _productService.RemoveProductInDbAsync(product.Id);
+                            return "Create product color failed.";
                         }
                     }
                     // Add product option
                     foreach (var option in productAddDto.Options)
                     {
-                        bool isAddProductOption = await AddProductOptionToDb(option);
+                        bool isAddProductOption = await _productOptionService.AddProductOptionToDbAsync(option);
                         if (isAddProductOption == false)
                         {
-                            await RemoveProductDb(product.Id);
-                            break;
+                            await _productService.RemoveProductInDbAsync(product.Id);
+                            return "Create product option failed.";
                         }
                     }
                     // Add product address shop
                     foreach (var productShop in productAddDto.ProductShops)
                     {
-                        bool isAddProductShop = await AddProductAddressShopToDb(productShop);
+                        bool isAddProductShop = await _productAddressShopService.AddProductAddressShopToDbAsync(productShop);
                         if (isAddProductShop == false)
                         {
-                            await RemoveProductDb(product.Id);
-                            break;
+                            await _productService.RemoveProductInDbAsync(product.Id);
+                            return "Create product address shop failed.";
                         }
                     }
                     // Add product property
                     foreach (var property in productAddDto.Properties)
                     {
-                        bool isAddProperty = await AddPropertyToDb(property);
+                        bool isAddProperty = await _productPropertyService.AddPropertyAsync(property);
                         if (isAddProperty == false)
                         {
-                            await RemoveProductDb(product.Id);
-                            break;
+                            await _productService.RemoveProductInDbAsync(product.Id);
+                            return "Create product property failed.";
                         }
                     }
                     
                     return "Product created successfully.";
                 }
                 return "Create product failed.";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit([FromRoute] Guid id)
+        {
+            if(id == Guid.Empty)
+            {
+                return BadRequest();
+            }
+
+            var data = await GetDataEditView(id);
+            return View(data);
+        }
+
+        [HttpPost]
+        public async Task<string> EditProductPost([FromBody] ProductPostDto productEditDto)
+        {
+            if (productEditDto == null)
+            {
+                return "Update product failed";
+            }
+
+            // Update product
+            try
+            {
+                Product product = new Product()
+                {
+                    Id = productEditDto.Id,
+                    Name = productEditDto.Name,
+                    Description = productEditDto.Description,
+                    BrandId = productEditDto.BrandId,
+                    CategoryId = productEditDto.CategoryId,
+                    DefaultImage = productEditDto.DefaultImage,
+                    Price = productEditDto.Price,
+                    Discount = productEditDto.Discount,
+                    Quantity = productEditDto.Quantity,
+                    Publish = productEditDto.Publish,
+                    CreatedBy = "Admin",
+                    UpdatedBy = "Admin",
+                    UpdatedDate = DateTime.Now,
+                };
+                bool isUpdate = await _productService.UpdateProductAsync(product);
+
+                if(isUpdate)
+                {
+                    // Remove all image
+                    await _productImageService.RemoveImageByProductIdAsync(product.Id);
+                    // Add product image
+                    foreach (var image in productEditDto.Images)
+                    {
+                        Image imageObj = new Image()
+                        {
+                            Id = image.Id,
+                            Src = image.Src,
+                            ProductId = image.ProductId
+                        };
+                        await _productImageService.AddProductImageToDbAsync(imageObj);
+                    }
+
+                    // Remove all color
+                    await _productColorService.RemoveColorByProductIdAsync(product.Id);
+                    // Add product color
+                    foreach (var color in productEditDto.Colors)
+                    {
+                        Color colorObj = new Color()
+                        {
+                            Id = color.Id,
+                            Name = color.Name,
+                            Price = color.Price,
+                            Quantity = color.Quantity,
+                            ProductId = color.ProductId
+                        };
+                        await _productColorService.AddProductColorToDbAsync(colorObj);
+                    }
+
+                    // Add product option
+                    foreach (var option in productEditDto.Options)
+                    {
+                        Option optionObj = new Option()
+                        {
+                            Id = option.Id,
+                            Name = option.Name,
+                            Value = option.Value,
+                            Quantity = option.Quantity,
+                            Price = option.Price,
+                            ColorId = option.ColorId
+                        };
+                        await _productOptionService.AddProductOptionToDbAsync(optionObj);
+                    }
+
+                    // Add product address shop
+                    foreach (var productShop in productEditDto.ProductShops)
+                    {
+                        ProductShop productShopObj = new ProductShop()
+                        {
+                            OptionId = productShop.OptionId,
+                            AddressShopId = productShop.AddressShopId,
+                            Quantity = productShop.Quantity,
+                        };
+                        await _productAddressShopService.AddProductAddressShopToDbAsync(productShop);
+                    }
+
+                    // Remove all product property
+                    await _productPropertyService.RemovePropertyByProductIdAsync(product.Id);
+                    // Add product property
+                    foreach (var property in productEditDto.Properties)
+                    {
+                        Property propertyObj = new Property()
+                        {
+                            Id = property.Id,
+                            Name = property.Name,
+                            Value = property.Value,
+                            ProductId = product.Id,
+                        };
+
+                        await _productPropertyService.AddPropertyAsync(propertyObj);
+                    }
+
+                    return "Update product success";
+                }
+
+                return "Update product failed";
             }
             catch (Exception ex)
             {
@@ -165,58 +292,28 @@ namespace project_ecommerce_admin.Controllers
             return productAddView;
         }
 
-        // Get all product from database
-        public async Task<List<ProductDto>> GetAllProducts()
+        // Get data view edit product
+        public async Task<ProductEditViewDto> GetDataEditView(Guid productId)
         {
-            return await _productService.GetAllProductsAsync();
-        }
+            // Get category list dto level 1,2,3
+            var categoriesLevel1 = await _categoryService.GetCategoryByLevelAsync(1);
+            var categoriesLevel2 = await _categoryService.GetCategoryByLevelAsync(2);
+            var categoriesLevel3 = await _categoryService.GetCategoryByLevelAsync(3);
 
-        // Add product to database
-        public async Task<bool> AddProductToDb(Product product)
-        {
-            return await _productService.AddProductToDbAsync(product);
-        }
+            var brands = await _brandService.GetAllBrandsAsync();
+            var addressShops = await _addressShopService.GetAllDataAsync();
 
-        // Remove product in database
-        public async Task<bool> RemoveProductDb(Guid productId)
-        {
-            return await _productService.RemoveProductInDbAsync(productId);
-        }
+            ProductEditViewDto productEditView = new ProductEditViewDto()
+            {
+                ProductDto = await _productService.GetProductByIdAsync(productId),
+                Brands = brands,
+                AddressShops = addressShops,
+                CategoriesLv1 = categoriesLevel1,
+                CategoriesLv2 = categoriesLevel2,
+                CategoriesLv3 = categoriesLevel3
+            };
 
-        // Add product image to database
-        public async Task<bool> AddProductImageToDb(Image productImage)
-        {
-            return await _productImageService.AddProductImageToDbAsync(productImage);
-        }
-
-        // Add product color to database
-        public async Task<bool> AddProductColorToDb(Color productColor)
-        {
-            return await _productColorService.AddProductColorToDbAsync(productColor);
-        }
-
-        // Add product color to database
-        public async Task<bool> RemoveProductColorDb(Guid productColorId)
-        {
-            return await _productColorService.RemoveProductColorInDbAsync(productColorId);
-        }
-
-        // Add product option to database
-        public async Task<bool> AddProductOptionToDb(Option productOption)
-        {
-            return await _productOptionService.AddProductOptionToDbAsync(productOption);
-        }
-
-        // Add product address shop to database
-        public async Task<bool> AddProductAddressShopToDb(ProductShop productShop)
-        {
-            return await _productAddressShopService.AddProductAddressShopToDbAsync(productShop);
-        }
-
-        // Add product property to database
-        public async Task<bool> AddPropertyToDb(Property property)
-        {
-            return await _productPropertyService.AddPropertyAsync(property);
+            return productEditView;
         }
     }
 }

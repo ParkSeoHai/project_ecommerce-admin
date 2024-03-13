@@ -57,12 +57,12 @@
       "PackagePath": "staticwebassets\\images\\avatar1.jpg"
     },
     {
-      "Id": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\js\\addProduct.js",
-      "PackagePath": "staticwebassets\\js\\addProduct.js"
-    },
-    {
       "Id": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\js\\index.js",
       "PackagePath": "staticwebassets\\js\\index.js"
+    },
+    {
+      "Id": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\js\\product.js",
+      "PackagePath": "staticwebassets\\js\\product.js"
     },
     {
       "Id": "D:\\Workspace\\Vue.js 3\\project_ecommerce_admin\\project_ecommerce_admin\\wwwroot\\lib\\bootstrap\\LICENSE",

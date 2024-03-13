@@ -5,7 +5,7 @@ let productImages = [];
 let productAddressShops = [];
 let productProperties = [];
 let stepActive = 1;
-const productId = crypto.randomUUID();
+let productId = crypto.randomUUID();
 let productName, productPrice, productDiscount;
 
 let productImageActive = '';
@@ -24,14 +24,15 @@ function displayProductImage(productImages) {
     const productImageElement = document.querySelector('.product-info__image');
     productImageElement.innerHTML = '';
 
-    if (productImageActive === '') productImageActive = productImages[0].id;
+    if (productImageActive === '') productImageActive = productImages[0].src;
 
     productImages.forEach(image => {
         const productImageItem = `
-            <div class="product-info__image--item ${productImageActive == image.id ? 'active' : ''}"
-                onclick="setImageActive('${image.id}')">
+            <div class="product-info__image--item ${productImageActive == image.src ? 'active' : ''}">
                 <img src="${image.src}"
-                     alt="">
+                     alt="" onclick="setImageActive('${image.src}')">
+                <button class="btn btn-success btn-active">v</button>
+                <button class="btn btn-danger btn-delete" onclick="removeProductImage('${image.id}')">x</button>
             </div>
         `;
 
@@ -39,8 +40,8 @@ function displayProductImage(productImages) {
     })
 }
 
-function setImageActive(imageId) {
-    productImageActive = imageId;
+function setImageActive(imageSrc) {
+    productImageActive = imageSrc;
     displayProductImage(productImages);
 }
 
@@ -101,6 +102,18 @@ function uploadProductImage() {
     for (let i = 0; i < files.length; i++) {
         uploadFile(files[i], folder); // call the function to upload the file
     }
+}
+
+function removeProductImage(imageId) {
+    let productImagesNew = [];
+    productImages.forEach(image => {
+        if (image.id !== imageId) {
+            productImagesNew.push(image);
+        }
+    })
+
+    productImages = productImagesNew;
+    displayProductImage(productImages);
 }
 
 // Colors
@@ -262,7 +275,9 @@ function displayProductAddressTable(productAddressShops) {
                     <td>${productAddress.quantity}</td>
                     <td>${productAddress.address}</td>
                     <td>
-                        <span class="text-danger fw-semibold" onclick="removeProductAddress('${productAddress.id}')" style="cursor: pointer;">Delete</span>
+                        <span class="text-danger fw-semibold"
+                            onclick="removeProductAddress('${productAddress.optionId}', '${productAddress.addressShopId}')"
+                            style="cursor: pointer;">Delete</span>
                     </td>
                 </tr>
             `;
@@ -332,7 +347,6 @@ function addProductAddress() {
         const addressText = addressShop.options[addressShop.selectedIndex].text;
 
         const productAddress = {
-            id: crypto.randomUUID(),
             optionId: optionId,
             addressShopId: addressShop.value,
             quantity: quantity,
@@ -347,10 +361,10 @@ function addProductAddress() {
     }
 }
 
-function removeProductAddress(productAddressId) {
+function removeProductAddress(optionId, addressShopId) {
     let productAddressShopsNew = [];
     productAddressShops.forEach(productAddress => {
-        if (productAddress.id !== productAddressId) {
+        if (!(productAddress.optionId === optionId && productAddress.addressShopId === addressShopId)) {
             productAddressShopsNew.push(productAddress)
         }
     })
@@ -424,7 +438,7 @@ function displayProductPreview() {
     // Get src image default
     let srcDefaultImage;
     productImages.forEach(image => {
-        if (image.id === productImageActive) {
+        if (image.src === productImageActive) {
             srcDefaultImage = image.src;
         }
     });
@@ -490,7 +504,7 @@ function getInfoProduct() {
     const brandId = document.getElementById('product-brand').value;
     const categoryId = document.getElementById('product-category__3').value;
     productName = document.getElementById('product-name').value;
-    const productDescription = document.getElementById('product-description').value;
+    const productDescription = document.getElementById('product-description').value.trim();
     productPrice = document.getElementById('product-price').value;
     productDiscount = document.getElementById('product-discount').value;
     const productVisibility = document.querySelector('input[name="product-visibility"]:checked').value;
@@ -500,13 +514,6 @@ function getInfoProduct() {
     productColors.forEach(color => {
         productQuantity += Number.parseInt(color.quantity);
     })
-    // Get image default
-    let imageDefaultSrc = '';
-    productImages.forEach(image => {
-        if (image.id === productImageActive) {
-            imageDefaultSrc = image.src;
-        }
-    });
 
     return productInfo = {
         id: productId,
@@ -519,7 +526,7 @@ function getInfoProduct() {
         quantity: productQuantity,
         publish: isPublish,
         images: productImages,
-        defaultImage: imageDefaultSrc,
+        defaultImage: productImageActive,
         colors: productColors,
         options: productOptions,
         productShops: productAddressShops,
@@ -528,6 +535,4 @@ function getInfoProduct() {
 }
 
 // Call function
-displayProductColor(productColors);
-displayProductOptionTable(productOptions);
 showStepBodyActive(stepActive);

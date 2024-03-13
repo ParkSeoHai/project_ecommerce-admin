@@ -1,8 +1,8 @@
 ﻿@using project_ecommerce_admin.DTOs.Product;
-@model ProductAddViewDto
+@model ProductEditViewDto;
 
 @{
-    ViewData["Title"] = "Create Product";
+    ViewData["Title"] = "Edit Product";
 }
 
 <!-- Breadcrumb -->
@@ -14,7 +14,7 @@
         <li class="breadcrumb-item">
             <a asp-controller="Product" asp-action="Index" class="breadcrumb-link">Products</a>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">Add Product</li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Product</li>
     </ol>
 </nav>
 <!-- Body -->
@@ -60,7 +60,7 @@
                             <div class="col-8">
                                 <div class="input-group">
                                     <input id="product-name" type="text" class="form-control fs-4 fw-semibold"
-                                           placeholder="Enter product name">
+                                           placeholder="Enter product name" value="@Model.ProductDto.Name">
                                 </div>
                             </div>
                         </div>
@@ -82,10 +82,6 @@
                                     </div>
                                 </div>
                                 <div class="product-info__image mt-3 d-flex align-items-center flex-wrap gap-3">
-                                    @* <div class="product-info__image--item">
-                                        <img src="https://product.hstatic.net/200000713019/product/iphone-13-hai-phong-3_e68d9b753b4340009113006ce7972daf_30e32c9b186944b6aed5de1d596efd2c_large.jpg"
-                                             alt="">
-                                    </div> *@
                                 </div>
                             </div>
                         </div>
@@ -102,9 +98,15 @@
                                     <div class="col-4">
                                         <select id="product-brand" class="form-select fs-4">
                                             <option value="0" selected>Select brand</option>
-                                            @foreach(var brand in Model.Brands)
+                                            @foreach (var brand in Model.Brands)
                                             {
-                                                <option value="@brand.Id">@brand.Name</option>
+                                                if(Model.ProductDto.Brand.Id == brand.Id)
+                                                {
+                                                    <option value="@brand.Id" selected>@brand.Name</option>
+                                                } else
+                                                {
+                                                    <option value="@brand.Id">@brand.Name</option>
+                                                }
                                             }
                                         </select>
                                     </div>
@@ -124,20 +126,58 @@
                                     <div class="col">
                                         <select id="product-category__1" class="form-select fs-4" onchange="updateCategory(this, 'product-category__2')">
                                             <option value="0" selected>Select category</option>
-                                            @foreach(var category in Model.Categories)
+                                            @foreach (var category in Model.CategoriesLv1)
                                             {
-                                                <option value="@category.Id">@category.Name</option>
+                                                @* Get categoryId level 2 of product current *@
+                                                var categoryIdLv2 = "";
+                                                @foreach (var category2 in Model.CategoriesLv2)
+                                                {
+                                                    if (category2.Id.ToString().Equals(Model.ProductDto.Category.CategoryId)
+                                                    && category.Id.ToString().Equals(category2.CategoryId))
+                                                                                    {
+                                                        categoryIdLv2 = category2.CategoryId;
+                                                        break;
+                                                    }
+                                                }
+                                                
+                                                if(category.Id.ToString().Equals(categoryIdLv2))
+                                                {
+                                                    <option value="@category.Id" selected>@category.Name</option>
+                                                } else
+                                                {
+                                                    <option value="@category.Id">@category.Name</option>
+                                                }
                                             }
                                         </select>
                                     </div>
 
                                     <div class="col">
                                         <select id="product-category__2" class="form-select fs-4" onchange="updateCategory(this, 'product-category__3')">
+                                            @foreach (var category in Model.CategoriesLv2)
+                                            {
+                                                if(category.Id.ToString().Equals(Model.ProductDto.Category.CategoryId))
+                                                {
+                                                    <option value="@category.Id" selected>@category.Name</option>
+                                                } else
+                                                {
+                                                    <option value="@category.Id">@category.Name</option>
+                                                }
+                                            }
                                         </select>
                                     </div>
 
                                     <div class="col">
                                         <select id="product-category__3" class="form-select fs-4" onchange="updateCategory(this, null)">
+                                            @foreach (var category in Model.CategoriesLv3)
+                                            {
+                                                if (category.Id.Equals(Model.ProductDto.Category.Id))
+                                                {
+                                                    <option value="@category.Id" selected>@category.Name</option>
+                                                } else
+                                                {
+                                                    <option value="@category.Id">@category.Name</option>
+                                                }
+                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -299,6 +339,10 @@
                                                         class="form-select fs-4"
                                                         onchange="onChangeProductAddressColorSelect('product-info__address--option', this)">
                                                     <option selected value="0">Select color</option>
+                                                    @foreach(var color in Model.ProductDto.Colors)
+                                                    {
+                                                        <option value="@color.Id">@color.Name</option>
+                                                    }
                                                 </select>
                                             </div>
 
@@ -350,7 +394,8 @@
                                                 <th scope="col" class="fw-bold">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody></tbody>
+                                        <tbody>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -403,7 +448,8 @@
                                                 <th scope="col" class="fw-bold">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody></tbody>
+                                        <tbody>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -411,7 +457,9 @@
                     </div>
                     <!-- Step 2 -->
                     <div class="product-info__step--body product-step__body--2">
-                        <textarea name="description" id="product-description" cols="30" rows="10" class="w-100" placeholder="Description"></textarea>
+                        <textarea name="description" id="product-description" cols="30" rows="10" class="w-100" placeholder="Description">
+                            @Model.ProductDto.Description
+                        </textarea>
                     </div>
                     <!-- Step 3 -->
                     <div class="product-info__step--body product-step__body--3">
@@ -428,13 +476,13 @@
                                     <div class="col">
                                         <div class="input-group">
                                             <input type="text" id="product-price" class="form-control fs-4 fw-semibold"
-                                                   placeholder="Enter Product Price">
+                                                   placeholder="Enter Product Price" value="@Model.ProductDto.Price">
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="input-group">
                                             <input type="text" id="product-discount" class="form-control fs-4 fw-semibold"
-                                                   placeholder="Enter Product Discount">
+                                                   placeholder="Enter Product Discount" value="@Model.ProductDto.Discount">
                                         </div>
                                     </div>
                                 </div>
@@ -458,18 +506,35 @@
             <!-- Publish -->
             <div class="bg-white product-info__block mt-4">
                 <h2 class="product-info__title lv-2">Visibility</h2>
-                <div class="form-check pt-4">
-                    <input class="form-check-input" value="publish" type="radio" name="product-visibility" id="publish" checked>
-                    <label class="form-check-label mt-2" for="publish">
-                        Publish
-                    </label>
-                </div>
-                <div class="form-check pt-2">
-                    <input class="form-check-input" value="hidden" type="radio" name="product-visibility" id="hidden">
-                    <label class="form-check-label mt-2" for="hidden">
-                        Hidden
-                    </label>
-                </div>
+                @if(Model.ProductDto.Publish == true)
+                {
+                    <div class="form-check pt-4">
+                        <input class="form-check-input" value="publish" type="radio" name="product-visibility" id="publish" checked>
+                        <label class="form-check-label mt-2" for="publish">
+                            Publish
+                        </label>
+                    </div>
+                    <div class="form-check pt-2">
+                        <input class="form-check-input" value="hidden" type="radio" name="product-visibility" id="hidden">
+                        <label class="form-check-label mt-2" for="hidden">
+                            Hidden
+                        </label>
+                    </div>
+                } else
+                {
+                    <div class="form-check pt-4">
+                        <input class="form-check-input" value="publish" type="radio" name="product-visibility" id="publish">
+                        <label class="form-check-label mt-2" for="publish">
+                            Publish
+                        </label>
+                    </div>
+                    <div class="form-check pt-2">
+                        <input class="form-check-input" value="hidden" type="radio" name="product-visibility" id="hidden" checked>
+                        <label class="form-check-label mt-2" for="hidden">
+                            Hidden
+                        </label>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -485,6 +550,34 @@
 
 <script src="~/js/product.js" asp-append-version="true"></script>
 <script type="text/javascript" language="javascript">
+    // Serialize the Model object to JSON
+    const data = @Html.Raw(Json.Serialize(Model));
+    productColors = data.productDto.colors;
+    productOptions = data.productDto.options;
+    productImages = data.productDto.images;
+    productProperties = data.productDto.properties;
+    productId = data.productDto.id;
+    productImageActive = data.productDto.defaultImage;
+    // Get data product shop address
+    data.productDto.productShops.forEach(item => {
+        productAddressShops.push({
+            optionId: item.optionId,
+            addressShopId: item.addressShopId,
+            quantity: item.quantity,
+            colorName: item.option.color.name,
+            type: item.option.name,
+            value: item.option.value,
+            address: item.addressShop.address
+        });
+    });
+    // Display data
+    displayProductImage(productImages);
+    displayProductColor(productColors);
+    displayProductOptionTable(productOptions);
+    displayProductAddressTable(productAddressShops);
+    displayProperties(productProperties);
+    displayProductPreview();
+    console.log(data);
 
     // Display select option category
     function displayCategorySelect(selectId, categoriesData) {
@@ -498,8 +591,8 @@
 
             categoriesData.forEach(category => {
                 const html = `
-                                        <option value="${category.id}">${category.name}</option>
-                                    `;
+                    <option value="${category.id}">${category.name}</option>
+                `;
                 selectElement.innerHTML += html;
             })
         }
@@ -534,7 +627,7 @@
             const productData = getInfoProduct();
             console.log(productData);
             $.ajax({
-                url: '@Url.Action("CreateProductPost", "Product")',
+                url: '@Url.Action("EditProductPost", "Product")',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(productData),
