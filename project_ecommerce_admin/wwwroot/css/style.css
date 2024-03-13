@@ -115,15 +115,15 @@
     background-color: #fff;
 }
 
-    .sidebar-nav .nav-link.active,
-    .sidebar-nav .nav-link:hover {
-        color: #fff;
-        background-color: var(--color-primary);
-    }
+.sidebar-nav .nav-link.active,
+.sidebar-nav .nav-link:hover {
+    color: #fff;
+    background-color: var(--color-primary);
+}
 
-    .sidebar-nav .nav-link.active {
-        pointer-events: none;
-    }
+.sidebar-nav .nav-link.active {
+    pointer-events: none;
+}
 
 .sidebar-nav .nav-icon svg {
     width: 20px;
@@ -131,6 +131,7 @@
 }
 
 .sidebar-nav .nav-text {
+    margin-top: 2px;
     margin-left: 8px;
     margin-right: auto;
 }

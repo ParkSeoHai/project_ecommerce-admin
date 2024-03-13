@@ -267,6 +267,17 @@ namespace project_ecommerce_admin.Controllers
             }
         }
 
+        [Route("Product/Delete/{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var isDeleteProduct = await _productService.RemoveProductInDbAsync(id);
+            if(isDeleteProduct)
+            {
+                return RedirectToAction("Index");
+            }
+            return BadRequest("Delete failed");
+        }
+
         // Get category when onchange select from create view
         [HttpPost]
         public async Task<IActionResult> GetCategoryById([FromBody] string categoryId)

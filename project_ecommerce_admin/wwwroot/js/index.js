@@ -1,7 +1,7 @@
 /* Toggle show nav sidebar */
 function toggleSidebar() {
     $('.sidebar-nav').toggleClass('show');
-    $('.modal').toggleClass('d-block');
+    $('.modal-main').toggleClass('d-block');
 }
 
 /* Handle click modal */
