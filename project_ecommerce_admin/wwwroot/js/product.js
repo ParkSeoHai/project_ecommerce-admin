@@ -69,11 +69,13 @@ function uploadFile(file, folderName) {
             productImages.push(
                 {
                     id: crypto.randomUUID(),
+                    fileName: file.name,
                     src: data.url,
                     productId: productId
                 }
             )
             displayProductImage(productImages);
+            displayImageColorSelect(productImages);
         })
         .catch((error) => {
             console.error('Error uploading the file:', error);
@@ -114,6 +116,7 @@ function removeProductImage(imageId) {
 
     productImages = productImagesNew;
     displayProductImage(productImages);
+    displayImageColorSelect(productImages);
 }
 
 // Colors
@@ -126,6 +129,7 @@ function displayProductColor(productColors) {
             <tr>
                 <th scope="row">${count}</th>
                 <td>${color.name}</td>
+                <td><image style="width=40px; height: 40px; object-fit: cover;" src="${color.image}"></td>
                 <td>${formatToVND(color.price)}</td>
                 <td>${color.quantity}</td>
                 <td>
@@ -139,8 +143,24 @@ function displayProductColor(productColors) {
     displayProductOptionColorSelect();
 }
 
+function displayImageColorSelect(productImages) {
+    const imageSelect = document.getElementById('product-info__color--image');
+    if (imageSelect) {
+        imageSelect.innerHTML = '';
+        imageSelect.innerHTML = '<option selected value="0">Select image</option>';
+
+        productImages.forEach(image => {
+            const option = `
+                <option value="${image.src}">${image.fileName}</option>
+            `;
+            imageSelect.innerHTML += option;
+        });
+    }
+}
+
 function addColor() {
     const nameColor = document.getElementById('name-color').value;
+    const imageColor = document.getElementById('product-info__color--image').value;
     const priceColor = document.getElementById('price-color').value;
     const quantityColor = document.getElementById('quantity-color').value;
 
@@ -149,6 +169,7 @@ function addColor() {
             // id: productColors.length > 0 ? productColors[productColors.length - 1].id + 1 : 1,
             id: crypto.randomUUID(),
             name: nameColor,
+            image: imageColor,
             price: priceColor,
             quantity: quantityColor,
             productId: productId

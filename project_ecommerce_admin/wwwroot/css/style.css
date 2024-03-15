@@ -195,7 +195,9 @@
 }
 
 .table-block th,
-.table-block td {
+.table-block td,
+.product-info__color--table th,
+.product-info__color--table td {
     vertical-align: middle;
 }
 

@@ -9,6 +9,8 @@ namespace project_ecommerce_admin.Models
         public Guid Id { get; set; }
         [Column(TypeName = "nvarchar(100)")]
         public string Name { get; set; }
+        [Column(TypeName = "nvarchar(500)")]
+        public string Image { get; set; }
         public double Price { get; set; }
         public int Quantity { get; set; }
 
